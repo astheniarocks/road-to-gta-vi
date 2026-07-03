@@ -4,6 +4,8 @@ import { isLocalPreviewReference } from "./assetHelpers";
 
 const COLOR_PATTERN =
   /^(#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})|rgba?\([^)]+\)|hsla?\([^)]+\)|[a-zA-Z]+)$/;
+const BAR_FILL_PATTERN =
+  /^(linear-gradient\([^)]+\)|radial-gradient\([^)]+\)|repeating-linear-gradient\([^)]+\)|repeating-radial-gradient\([^)]+\)|#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})|rgba?\([^)]+\)|hsla?\([^)]+\)|[a-zA-Z]+)$/;
 
 function addIssue(
   issues: ValidationIssue[],
@@ -69,7 +71,7 @@ export function validateConfig(config: SiteConfig): ValidationIssue[] {
   Object.entries(config.theme).forEach(([key, value]) => {
     if (!value.trim()) {
       addIssue(issues, "error", `Theme colour ${key} cannot be empty.`, `theme.${key}`);
-    } else if (!COLOR_PATTERN.test(value.trim())) {
+    } else if (key === "barFillColor" ? !BAR_FILL_PATTERN.test(value.trim()) : !COLOR_PATTERN.test(value.trim())) {
       addIssue(issues, "warning", `Theme colour ${key} may not be a valid CSS colour.`, `theme.${key}`);
     }
   });

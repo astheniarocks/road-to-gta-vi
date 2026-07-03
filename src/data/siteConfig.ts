@@ -43,7 +43,6 @@ export const siteConfig: SiteConfig = {
       id: "rockstar-announcement",
       title: "Rockstar Confirms Next GTA",
       date: "2022-02-04",
-      description: "Rockstar confirms active development of the next Grand Theft Auto.",
       thumbnail: "",
       importance: "major",
       preferredPlacement: "below"
@@ -52,7 +51,6 @@ export const siteConfig: SiteConfig = {
       id: "gta-vi-leak",
       title: "GTA VI Development Leak",
       date: "2022-09-18",
-      description: "Major in-development footage leak appears online.",
       thumbnail: "",
       importance: "major",
       preferredPlacement: "below"
@@ -61,7 +59,54 @@ export const siteConfig: SiteConfig = {
       id: "trailer-1",
       title: "Trailer 1",
       date: "2023-12-05",
-      description: "Rockstar releases Trailer 1 for Grand Theft Auto VI.",
+      thumbnail: "",
+      importance: "major",
+      preferredPlacement: "below"
+    },
+    {
+      id: "delay-1-fardiar-returns",
+      title: "Delay 1 / Fardiar Returns",
+      date: "2025-05-02",
+      thumbnail: "",
+      importance: "major",
+      preferredPlacement: "below"
+    },
+    {
+      id: "trailer-2",
+      title: "Trailer 2",
+      date: "2025-05-06",
+      thumbnail: "",
+      importance: "major",
+      preferredPlacement: "below"
+    },
+    {
+      id: "delay-2",
+      title: "Delay 2",
+      date: "2025-11-06",
+      thumbnail: "",
+      importance: "major",
+      preferredPlacement: "below"
+    },
+    {
+      id: "cover-preorders",
+      title: "Cover x Pre-Orders",
+      date: "2026-06-18",
+      thumbnail: "",
+      importance: "major",
+      preferredPlacement: "below"
+    },
+    {
+      id: "screenshots-editions",
+      title: "Screenshots x Editions",
+      date: "2026-06-18",
+      thumbnail: "",
+      importance: "major",
+      preferredPlacement: "below"
+    },
+    {
+      id: "pre-orders-begin",
+      title: "Pre-Orders Begin",
+      date: "2026-06-25",
       thumbnail: "",
       importance: "major",
       preferredPlacement: "below"
@@ -70,7 +115,6 @@ export const siteConfig: SiteConfig = {
       id: "launch",
       title: "Launch",
       date: "2026-11-19",
-      description: "Grand Theft Auto VI launch date.",
       thumbnail: "",
       importance: "major",
       preferredPlacement: "auto"
