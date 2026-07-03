@@ -80,7 +80,6 @@ export function PageShell({ children, config }: PageShellProps) {
       <Sidebar
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
-        showEditorLink={config.navigation.showEditorLink}
         showGamesLink={config.navigation.showGamesLink}
       />
       <div className={`page-shell ${isTimelinePage ? "is-timeline-page" : ""}`}>

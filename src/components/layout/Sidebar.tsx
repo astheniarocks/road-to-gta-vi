@@ -2,25 +2,19 @@ import { NavLink } from "react-router-dom";
 
 type SidebarProps = {
   isOpen: boolean;
-  showEditorLink: boolean;
   showGamesLink: boolean;
   onClose: () => void;
 };
 
 const navigationItems = [
   { label: "Timeline", to: "/", group: "main" },
-  { label: "Editor", to: "/editor", group: "editor" },
   { label: "Minigames", to: "/games", group: "games" },
   { label: "Bowling", to: "/games/bowling", group: "games" },
   { label: "Privacy Policy", to: "/privacy", group: "main" }
 ];
 
-export function Sidebar({ isOpen, showEditorLink, showGamesLink, onClose }: SidebarProps) {
+export function Sidebar({ isOpen, showGamesLink, onClose }: SidebarProps) {
   const visibleItems = navigationItems.filter((item) => {
-    if (item.group === "editor") {
-      return showEditorLink;
-    }
-
     if (item.group === "games") {
       return showGamesLink;
     }
