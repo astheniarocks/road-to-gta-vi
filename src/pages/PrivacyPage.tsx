@@ -9,7 +9,7 @@ export function PrivacyPage() {
         profiles.
       </p>
       <p>
-        Any configuration changes made in the editor, including uploaded image previews, are stored
+        Any configuration changes made on the site, including uploaded image previews, are stored
         locally in your own browser unless you choose to export or publish them yourself.
       </p>
       <p>Dreamfield Industries does not receive or process those local edits.</p>

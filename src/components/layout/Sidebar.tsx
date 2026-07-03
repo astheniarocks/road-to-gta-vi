@@ -9,7 +9,6 @@ type SidebarProps = {
 const navigationItems = [
   { label: "Timeline", to: "/", group: "main" },
   { label: "Minigames", to: "/games", group: "games" },
-  { label: "Bowling", to: "/games/bowling", group: "games" },
   { label: "Privacy Policy", to: "/privacy", group: "main" }
 ];
 
