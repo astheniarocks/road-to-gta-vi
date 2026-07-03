@@ -9,11 +9,6 @@ export function PrivacyPage() {
         profiles.
       </p>
       <p>
-        Any configuration changes made on the site, including uploaded image previews, are stored
-        locally in your own browser unless you choose to export or publish them yourself.
-      </p>
-      <p>Dreamfield Industries does not receive or process those local edits.</p>
-      <p>
         Depending on where the site is hosted, the hosting provider may process standard technical
         request logs for security and reliability, but this website does not use those logs for
         analytics, advertising or profiling.
