@@ -1,0 +1,110 @@
+.bowling-page {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(280px, 420px);
+  gap: 22px;
+  align-items: stretch;
+}
+
+.bowling-lane {
+  position: relative;
+  min-height: 420px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-card);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent 18%, transparent 82%, rgba(255, 255, 255, 0.08)),
+    linear-gradient(180deg, #2b1831, #130d18 46%, #09070c);
+  overflow: hidden;
+}
+
+.bowling-lane::before,
+.bowling-lane::after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  content: "";
+}
+
+.bowling-lane::before {
+  left: 31%;
+}
+
+.bowling-lane::after {
+  right: 31%;
+}
+
+.bowling-pin {
+  position: absolute;
+  top: 58px;
+  width: 22px;
+  height: 54px;
+  border-radius: 999px 999px 8px 8px;
+  background: #fff7fb;
+}
+
+.bowling-pin::after {
+  position: absolute;
+  top: 19px;
+  left: 2px;
+  right: 2px;
+  height: 6px;
+  border-radius: 99px;
+  background: var(--accent-pink);
+  content: "";
+}
+
+.pin-one {
+  left: calc(50% - 11px);
+}
+
+.pin-two {
+  left: calc(50% - 42px);
+  top: 86px;
+}
+
+.pin-three {
+  left: calc(50% + 20px);
+  top: 86px;
+}
+
+.bowling-ball {
+  position: absolute;
+  bottom: 58px;
+  left: calc(50% - 36px);
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 36% 34%, rgba(255, 255, 255, 0.92) 0 6px, transparent 7px),
+    radial-gradient(circle at 57% 32%, rgba(255, 255, 255, 0.55) 0 5px, transparent 6px),
+    radial-gradient(circle at 46% 53%, rgba(255, 255, 255, 0.42) 0 4px, transparent 5px),
+    var(--accent-cyan);
+}
+
+.bowling-copy {
+  align-self: center;
+  padding: 26px;
+}
+
+.bowling-copy h1 {
+  margin: 0 0 14px;
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  line-height: 1;
+}
+
+.bowling-copy p:not(.page-kicker) {
+  margin: 0 0 22px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+@media (max-width: 820px) {
+  .bowling-page {
+    grid-template-columns: 1fr;
+  }
+
+  .bowling-lane {
+    min-height: 300px;
+  }
+}

@@ -1,0 +1,24 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Neon road placeholder background</title>
+  <desc id="desc">A custom dark neon background with horizon lines and a stylised road.</desc>
+  <rect width="1920" height="1080" fill="#07050A"/>
+  <rect width="1920" height="1080" fill="url(#sky)"/>
+  <path d="M0 676C210 620 382 620 566 674C758 730 942 728 1138 663C1348 593 1584 606 1920 702V1080H0V676Z" fill="#120B18"/>
+  <path d="M782 1080L912 666H1014L1162 1080H782Z" fill="#0B0910"/>
+  <path d="M962 690V1080" stroke="#FFF7FB" stroke-width="6" stroke-dasharray="36 38" opacity=".46"/>
+  <path d="M0 704C284 624 461 647 655 704C838 758 1018 760 1228 692C1434 625 1653 642 1920 720" stroke="#FF4FD8" stroke-width="5" opacity=".72"/>
+  <path d="M0 744C284 664 461 687 655 744C838 798 1018 800 1228 732C1434 665 1653 682 1920 760" stroke="#30F5C8" stroke-width="4" opacity=".54"/>
+  <path d="M0 800H1920" stroke="#FFD166" stroke-width="2" opacity=".22"/>
+  <g opacity=".28">
+    <path d="M120 612H276V630H120V612Z" fill="#30F5C8"/>
+    <path d="M1508 578H1702V598H1508V578Z" fill="#FF4FD8"/>
+    <path d="M1314 648H1442V664H1314V648Z" fill="#FFD166"/>
+  </g>
+  <defs>
+    <radialGradient id="sky" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(960 214) rotate(90) scale(704 1252)">
+      <stop stop-color="#331144"/>
+      <stop offset=".48" stop-color="#120817"/>
+      <stop offset="1" stop-color="#07050A"/>
+    </radialGradient>
+  </defs>
+</svg>

@@ -1,0 +1,12 @@
+<svg width="920" height="360" viewBox="0 0 920 360" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Road to VI placeholder logo</title>
+  <desc id="desc">A custom neon placeholder wordmark for Road to VI.</desc>
+  <rect width="920" height="360" rx="34" fill="#09060D"/>
+  <path d="M52 286C148 206 230 252 322 176C410 103 497 106 590 162C681 216 758 186 868 74" stroke="#30F5C8" stroke-width="12" stroke-linecap="round"/>
+  <path d="M52 298C148 218 230 264 322 188C410 115 497 118 590 174C681 228 758 198 868 86" stroke="#FF4FD8" stroke-width="4" stroke-linecap="round"/>
+  <text x="92" y="146" fill="#FFF7FB" font-family="Arial, Helvetica, sans-serif" font-size="78" font-weight="800" letter-spacing="0">ROAD TO</text>
+  <text x="548" y="230" fill="#FFF7FB" font-family="Arial, Helvetica, sans-serif" font-size="172" font-weight="900" letter-spacing="0">VI</text>
+  <circle cx="122" cy="235" r="7" fill="#FFD166"/>
+  <circle cx="198" cy="230" r="5" fill="#30F5C8"/>
+  <circle cx="276" cy="205" r="6" fill="#FF4FD8"/>
+</svg>
