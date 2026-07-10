@@ -380,6 +380,21 @@ img {
 }
 
 @media (max-width: 720px) {
+  .app-shell {
+    min-height: 100svh;
+  }
+
+  .background-layer,
+  .background-overlay {
+    position: absolute;
+    min-height: 100%;
+  }
+
+  .background-layer {
+    background-position: center top;
+    background-size: cover;
+  }
+
   .main-content {
     width: min(100% - 24px, 1180px);
     padding-top: 78px;
