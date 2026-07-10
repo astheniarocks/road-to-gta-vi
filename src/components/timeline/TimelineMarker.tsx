@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { formatDisplayDate } from "../../utils/dateMath";
 import type { TimelineLayoutItem } from "./useTimelineLayout";
 
@@ -17,7 +18,7 @@ export function TimelineMarker({ item, isSelected, onSelect }: TimelineMarkerPro
         isSelected ? "is-selected" : ""
       } ${item.isOutsideRange ? "is-outside" : ""}`}
       onClick={() => onSelect(item.id)}
-      style={{ left: `${item.position * 100}%` }}
+      style={{ "--event-color": item.color, left: `${item.adjustedPosition * 100}%` } as CSSProperties}
       type="button"
     >
       <span className="timeline-marker-dot" />

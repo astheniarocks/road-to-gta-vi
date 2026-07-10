@@ -2,78 +2,38 @@ import { useMemo } from "react";
 import type { SiteConfig, TimelineEvent } from "../../types/config";
 import { calculateEventPosition, sortEventsByDate } from "../../utils/dateMath";
 
+const EVENT_COLORS = [
+  "#32d8ff",
+  "#ff4fd8",
+  "#ffe15c",
+  "#6cff8f",
+  "#ff8b3d",
+  "#9a7cff",
+  "#ff5f7e",
+  "#47f0c9",
+  "#f7a6ff",
+  "#7ee3ff"
+];
+
 export type TimelineLayoutItem = TimelineEvent & {
   position: number;
   rawPosition: number;
+  adjustedPosition: number;
   isOutsideRange: boolean;
-  side: "above" | "below";
-  laneIndex: number;
   markerX: number;
-  cardHeight: number;
-  left: number;
-  top: number;
-  width: number;
-};
-
-type Lane = {
-  side: "above" | "below";
-  index: number;
-  occupiedRanges: Array<{ left: number; right: number }>;
+  color: string;
 };
 
 type TimelineLayout = {
   items: TimelineLayoutItem[];
-  aboveSpace: number;
-  belowSpace: number;
-  barTop: number;
   stageHeight: number;
-  cardWidth: number;
+  barTop: number;
   trackLeft: number;
   trackWidth: number;
 };
 
 function clampPx(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
-}
-
-function getCardWidth(containerWidth: number): number {
-  if (containerWidth < 520) {
-    return clampPx(containerWidth * 0.44, 132, 164);
-  }
-
-  if (containerWidth < 820) {
-    return clampPx(containerWidth * 0.28, 156, 196);
-  }
-
-  return clampPx(containerWidth * 0.18, 178, 224);
-}
-
-function getLaneHeight(containerWidth: number, viewportHeight: number): number {
-  if (containerWidth < 520) {
-    return viewportHeight < 700 ? 68 : 82;
-  }
-
-  if (containerWidth < 820) {
-    return viewportHeight < 700 ? 78 : 98;
-  }
-
-  if (viewportHeight < 680) {
-    return 74;
-  }
-
-  if (viewportHeight < 780) {
-    return 86;
-  }
-
-  return 106;
-}
-
-function getCardHeight(containerWidth: number): number {
-  if (containerWidth < 520) {
-    return 58;
-  }
-
-  return 62;
 }
 
 function getScalePadding(containerWidth: number): number {
@@ -92,139 +52,102 @@ function getMarkerInset(containerWidth: number): number {
   return containerWidth < 520 ? 13 : 18;
 }
 
-function rangesOverlap(a: { left: number; right: number }, b: { left: number; right: number }, gap: number) {
-  return a.left < b.right + gap && b.left < a.right + gap;
-}
-
-function findOpenLane(lanes: Lane[], range: { left: number; right: number }, gap: number, maxIndex: number) {
-  return lanes.find(
-    (lane) =>
-      lane.index < maxIndex && !lane.occupiedRanges.some((occupied) => rangesOverlap(occupied, range, gap))
-  );
-}
-
-function getCardGapFromBar(viewportHeight: number): number {
-  if (viewportHeight < 680) {
-    return 42;
+function getMinimumMarkerGap(containerWidth: number): number {
+  if (containerWidth < 520) {
+    return 24;
   }
 
-  if (viewportHeight < 780) {
-    return 48;
+  if (containerWidth < 820) {
+    return 28;
   }
 
-  return 58;
+  return 34;
 }
 
-function getStageTailSpace(viewportHeight: number): number {
-  if (viewportHeight < 680) {
-    return 58;
+function getEventColor(id: string, index: number): string {
+  let hash = 0;
+
+  for (let charIndex = 0; charIndex < id.length; charIndex += 1) {
+    hash = (hash * 31 + id.charCodeAt(charIndex)) >>> 0;
   }
 
-  if (viewportHeight < 780) {
-    return 76;
-  }
-
-  return 108;
+  return EVENT_COLORS[(hash + index) % EVENT_COLORS.length];
 }
 
-export function useTimelineLayout(
-  config: SiteConfig,
-  containerWidth: number,
-  viewportHeight: number
-): TimelineLayout {
+function spreadMarkers(rawCenters: number[], minGap: number, minX: number, maxX: number): number[] {
+  if (rawCenters.length === 0) {
+    return [];
+  }
+
+  const centers = rawCenters.map((center) => clampPx(center, minX, maxX));
+
+  for (let index = 1; index < centers.length; index += 1) {
+    const required = centers[index - 1] + minGap;
+
+    if (centers[index] < required) {
+      centers[index] = required;
+    }
+  }
+
+  for (let index = centers.length - 1; index >= 0; index -= 1) {
+    const overflow = centers[index] - maxX;
+
+    if (overflow > 0) {
+      centers[index] -= overflow;
+
+      for (let backIndex = index - 1; backIndex >= 0; backIndex -= 1) {
+        const allowed = centers[backIndex + 1] - minGap;
+
+        if (centers[backIndex] > allowed) {
+          centers[backIndex] = allowed;
+        }
+      }
+    }
+  }
+
+  return centers.map((center) => clampPx(center, minX, maxX));
+}
+
+export function useTimelineLayout(config: SiteConfig, containerWidth: number): TimelineLayout {
   return useMemo(() => {
     const safeWidth = Math.max(containerWidth, 320);
     const scalePadding = getScalePadding(safeWidth);
     const trackLeft = scalePadding;
     const trackWidth = Math.max(160, safeWidth - scalePadding * 2);
     const markerInset = Math.min(getMarkerInset(safeWidth), trackWidth / 2);
-    const markerRange = Math.max(1, trackWidth - markerInset * 2);
-    const cardWidth = getCardWidth(safeWidth);
-    const cardHeight = getCardHeight(safeWidth);
-    const laneHeight = getLaneHeight(safeWidth, viewportHeight);
-    const cardGapFromBar = getCardGapFromBar(viewportHeight);
-    const stageTailSpace = getStageTailSpace(viewportHeight);
-    const gap = safeWidth < 520 ? 10 : 16;
-    const lanes: Record<"above" | "below", Lane[]> = { above: [], below: [] };
+    const markerMinX = trackLeft + markerInset;
+    const markerMaxX = trackLeft + trackWidth - markerInset;
+    const markerRange = Math.max(1, markerMaxX - markerMinX);
+    const sortedEvents = sortEventsByDate(config.events);
+    const positionedEvents = sortedEvents.map((event) => ({
+      event,
+      position: calculateEventPosition(event.date, config.startDate, config.endDate)
+    }));
+    const rawCenters = positionedEvents.map(({ position }) => markerMinX + position.clamped * markerRange);
+    const desiredGap = getMinimumMarkerGap(safeWidth);
+    const availableGap = rawCenters.length > 1 ? markerRange / (rawCenters.length - 1) : desiredGap;
+    const adjustedCenters = spreadMarkers(rawCenters, Math.min(desiredGap, availableGap), markerMinX, markerMaxX);
 
-    function createLane(side: "above" | "below"): Lane {
-      const lane: Lane = { side, index: lanes[side].length, occupiedRanges: [] };
-      lanes[side].push(lane);
-      return lane;
-    }
-
-    function placeEvent(event: TimelineEvent): TimelineLayoutItem {
-      const position = calculateEventPosition(event.date, config.startDate, config.endDate);
-      const center = trackLeft + markerInset + position.clamped * markerRange;
-      const left = clampPx(center - cardWidth / 2, 0, Math.max(0, safeWidth - cardWidth));
-      const range = { left, right: left + cardWidth };
-      const preferred = event.preferredPlacement ?? "auto";
-      const allowPreferredAbove = preferred === "above";
-      let selectedLane: Lane | undefined;
-
-      selectedLane = findOpenLane(lanes.below, range, gap, Number.POSITIVE_INFINITY);
-
-      if (!selectedLane && lanes.below.length === 0) {
-        selectedLane = createLane("below");
-      }
-
-      if (!selectedLane && !allowPreferredAbove) {
-        selectedLane = findOpenLane(lanes.above, range, gap, Number.POSITIVE_INFINITY);
-      }
-
-      if (!selectedLane && allowPreferredAbove) {
-        selectedLane = findOpenLane(lanes.above, range, gap, Number.POSITIVE_INFINITY);
-      }
-
-      if (!selectedLane) {
-        selectedLane = createLane(allowPreferredAbove ? "above" : "below");
-      }
-
-      selectedLane.occupiedRanges.push(range);
+    const items = positionedEvents.map(({ event, position }, index) => {
+      const markerX = adjustedCenters[index] ?? rawCenters[index] ?? markerMinX;
 
       return {
         ...event,
-        position: (center - trackLeft) / trackWidth,
+        position: position.clamped,
         rawPosition: position.raw,
+        adjustedPosition: (markerX - trackLeft) / trackWidth,
         isOutsideRange: position.isOutsideRange,
-        side: selectedLane.side,
-        laneIndex: selectedLane.index,
-        markerX: center,
-        cardHeight,
-        left,
-        top: 0,
-        width: cardWidth
+        markerX,
+        color: getEventColor(event.id, index)
       };
-    }
-
-    const placed = sortEventsByDate(config.events).map(placeEvent);
-    const aboveSpace = Math.max(
-      lanes.above.length * laneHeight + 12,
-      safeWidth < 520 ? 30 : viewportHeight < 780 ? 38 : 50
-    );
-    const belowSpace = Math.max(
-      lanes.below.length * laneHeight + 26,
-      safeWidth < 520 ? 108 : viewportHeight < 780 ? 120 : 148
-    );
-    const barTop = aboveSpace + (viewportHeight < 780 ? 20 : 32);
-
-    const items = placed.map((item) => ({
-      ...item,
-      top:
-        item.side === "above"
-          ? aboveSpace - (item.laneIndex + 1) * laneHeight + 8
-          : barTop + cardGapFromBar + item.laneIndex * laneHeight
-    }));
+    });
 
     return {
       items,
-      aboveSpace,
-      belowSpace,
-      barTop,
-      stageHeight: aboveSpace + belowSpace + stageTailSpace,
-      cardWidth,
+      stageHeight: safeWidth < 520 ? 34 : 42,
+      barTop: 0,
       trackLeft,
       trackWidth
     };
-  }, [config, containerWidth, viewportHeight]);
+  }, [config, containerWidth]);
 }

@@ -19,7 +19,7 @@ export function TimelineBar({ config, previewLabel }: TimelineBarProps) {
     typeof window === "undefined" ? 900 : window.innerHeight
   );
   const stageRef = useRef<HTMLDivElement | null>(null);
-  const layout = useTimelineLayout(config, containerWidth, viewportHeight);
+  const layout = useTimelineLayout(config, containerWidth);
   const shouldShowThumbnails =
     config.timeline.showThumbnails && containerWidth > config.timeline.mobileThumbnailBreakpoint;
   const useCompactEventList = containerWidth <= 520 || viewportHeight <= 620;
@@ -58,7 +58,6 @@ export function TimelineBar({ config, previewLabel }: TimelineBarProps) {
   }, [config.events, selectedEventId]);
 
   const percent = (progress * 100).toFixed(2);
-  const markerCenterY = layout.barTop + 17;
   const timelineStyle = {
     "--bar-track-color": config.theme.barTrackColor,
     "--bar-fill-color": config.theme.barFillColor,
@@ -87,14 +86,14 @@ export function TimelineBar({ config, previewLabel }: TimelineBarProps) {
         className="timeline-stage"
         ref={stageRef}
         style={{
-          minHeight: useCompactEventList ? 34 : layout.stageHeight
+          minHeight: layout.stageHeight
         }}
       >
         <div
           className="timeline-bar-row"
           style={{
             left: layout.trackLeft,
-            top: useCompactEventList ? 0 : layout.barTop,
+            top: layout.barTop,
             width: layout.trackWidth
           }}
         >
@@ -119,53 +118,16 @@ export function TimelineBar({ config, previewLabel }: TimelineBarProps) {
                 ))}
           </div>
         </div>
-        {useCompactEventList ? null : (
-          <>
-            <div className="timeline-connectors" aria-hidden="true">
-              {layout.items.map((item) => {
-                const dotRadius = item.importance === "minor" ? 5 : item.importance === "major" ? 9 : 7;
-                const cardEdgeY = item.side === "below" ? item.top : item.top + item.cardHeight;
-                const connectorStart = item.side === "below" ? markerCenterY + dotRadius : cardEdgeY;
-                const connectorEnd = item.side === "below" ? cardEdgeY : markerCenterY - dotRadius;
-                const top = Math.min(connectorStart, connectorEnd);
-                const height = Math.abs(connectorEnd - connectorStart);
-
-                return (
-                  <span
-                    className={`timeline-connector side-${item.side}`}
-                    key={`${item.id}-connector`}
-                    style={{
-                      height,
-                      left: item.markerX,
-                      top
-                    }}
-                  />
-                );
-              })}
-            </div>
-            {layout.items.map((item) => (
-              <TimelineEventCard
-                isSelected={item.id === selectedEventId}
-                item={item}
-                key={item.id}
-                onSelect={setSelectedEventId}
-                showThumbnail={shouldShowThumbnails}
-              />
-            ))}
-          </>
-        )}
       </div>
-      <div className="mobile-event-list" aria-label="Timeline events list">
+      <div className="timeline-event-list" aria-label="Timeline events list">
         {layout.items.map((item) => (
-          <button
-            className={`mobile-event-item ${item.id === selectedEventId ? "is-selected" : ""}`}
+          <TimelineEventCard
+            isSelected={item.id === selectedEventId}
+            item={item}
             key={item.id}
-            onClick={() => setSelectedEventId(item.id)}
-            type="button"
-          >
-            <span>{formatDisplayDate(item.date)}</span>
-            <strong>{item.title}</strong>
-          </button>
+            onSelect={setSelectedEventId}
+            showThumbnail={shouldShowThumbnails}
+          />
         ))}
       </div>
     </section>
