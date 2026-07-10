@@ -22,6 +22,7 @@ export function TimelineBar({ config, previewLabel }: TimelineBarProps) {
   const layout = useTimelineLayout(config, containerWidth, viewportHeight);
   const shouldShowThumbnails =
     config.timeline.showThumbnails && containerWidth > config.timeline.mobileThumbnailBreakpoint;
+  const useCompactEventList = containerWidth <= 520 || viewportHeight <= 620;
 
   useEffect(() => {
     const element = stageRef.current;
@@ -71,7 +72,7 @@ export function TimelineBar({ config, previewLabel }: TimelineBarProps) {
 
   return (
     <section
-      className="timeline-panel"
+      className={`timeline-panel ${useCompactEventList ? "is-compact-events" : ""}`}
       aria-label={previewLabel ?? "GTA VI timeline progress"}
       style={timelineStyle}
     >
@@ -85,7 +86,7 @@ export function TimelineBar({ config, previewLabel }: TimelineBarProps) {
         className="timeline-stage"
         ref={stageRef}
         style={{
-          minHeight: layout.stageHeight
+          minHeight: useCompactEventList ? 42 : layout.stageHeight
         }}
       >
         <div
@@ -101,47 +102,53 @@ export function TimelineBar({ config, previewLabel }: TimelineBarProps) {
                 } as CSSProperties
               }
             />
+            {useCompactEventList
+              ? null
+              : layout.items.map((item) => (
+                  <TimelineMarker
+                    isSelected={item.id === selectedEventId}
+                    item={item}
+                    key={item.id}
+                    onSelect={setSelectedEventId}
+                  />
+                ))}
+          </div>
+        </div>
+        {useCompactEventList ? null : (
+          <>
+            <div className="timeline-connectors" aria-hidden="true">
+              {layout.items.map((item) => {
+                const dotRadius = item.importance === "minor" ? 5 : item.importance === "major" ? 9 : 7;
+                const cardEdgeY = item.side === "below" ? item.top : item.top + item.cardHeight;
+                const connectorStart = item.side === "below" ? markerCenterY + dotRadius : cardEdgeY;
+                const connectorEnd = item.side === "below" ? cardEdgeY : markerCenterY - dotRadius;
+                const top = Math.min(connectorStart, connectorEnd);
+                const height = Math.abs(connectorEnd - connectorStart);
+
+                return (
+                  <span
+                    className={`timeline-connector side-${item.side}`}
+                    key={`${item.id}-connector`}
+                    style={{
+                      height,
+                      left: item.markerX,
+                      top
+                    }}
+                  />
+                );
+              })}
+            </div>
             {layout.items.map((item) => (
-              <TimelineMarker
+              <TimelineEventCard
                 isSelected={item.id === selectedEventId}
                 item={item}
                 key={item.id}
                 onSelect={setSelectedEventId}
+                showThumbnail={shouldShowThumbnails}
               />
             ))}
-          </div>
-        </div>
-        <div className="timeline-connectors" aria-hidden="true">
-          {layout.items.map((item) => {
-            const dotRadius = item.importance === "minor" ? 5 : item.importance === "major" ? 9 : 7;
-            const cardEdgeY = item.side === "below" ? item.top : item.top + item.cardHeight;
-            const connectorStart = item.side === "below" ? markerCenterY + dotRadius : cardEdgeY;
-            const connectorEnd = item.side === "below" ? cardEdgeY : markerCenterY - dotRadius;
-            const top = Math.min(connectorStart, connectorEnd);
-            const height = Math.abs(connectorEnd - connectorStart);
-
-            return (
-              <span
-                className={`timeline-connector side-${item.side}`}
-                key={`${item.id}-connector`}
-                style={{
-                  height,
-                  left: item.markerX,
-                  top
-                }}
-              />
-            );
-          })}
-        </div>
-        {layout.items.map((item) => (
-          <TimelineEventCard
-            isSelected={item.id === selectedEventId}
-            item={item}
-            key={item.id}
-            onSelect={setSelectedEventId}
-            showThumbnail={shouldShowThumbnails}
-          />
-        ))}
+          </>
+        )}
       </div>
       <div className="mobile-event-list" aria-label="Timeline events list">
         {layout.items.map((item) => (
