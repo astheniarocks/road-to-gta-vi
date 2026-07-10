@@ -219,6 +219,7 @@
   overflow: hidden;
   cursor: pointer;
   box-shadow: inset 3px 0 0 var(--event-color);
+  text-decoration: none;
 }
 
 .timeline-event-card:focus-visible {
@@ -229,6 +230,10 @@
 .timeline-event-card.is-selected {
   border-color: color-mix(in srgb, var(--event-color), transparent 14%);
   background: rgba(17, 16, 22, 0.94);
+}
+
+.timeline-event-card.has-link:hover {
+  border-color: color-mix(in srgb, var(--event-color), transparent 10%);
 }
 
 .timeline-event-card.importance-major {

@@ -30,23 +30,41 @@ export function TimelineEventCard({ item, isSelected, showThumbnail, onSelect }:
         {showThumbnail && item.thumbnail ? (
           <img alt="" className="timeline-event-thumbnail" loading="lazy" src={item.thumbnail} />
         ) : null}
-        {item.link ? (
-          <a className="timeline-event-link" href={item.link} rel="noreferrer" target="_blank">
-            Read more
-          </a>
-        ) : null}
+        {item.link ? <span className="timeline-event-link">Read more</span> : null}
       </div>
     </>
   );
+  const className = `timeline-event-card importance-${importance} ${isSelected ? "is-selected" : ""} ${
+    item.link ? "has-link" : ""
+  }`;
+  const style = { "--event-color": item.color } as CSSProperties;
+
+  if (item.link) {
+    return (
+      <a
+        aria-labelledby={`timeline-event-title-${item.id}`}
+        className={className}
+        href={item.link}
+        id={`timeline-event-${item.id}`}
+        onClick={() => onSelect(item.id)}
+        onFocus={() => onSelect(item.id)}
+        rel="noreferrer"
+        style={style}
+        target="_blank"
+      >
+        {cardContent}
+      </a>
+    );
+  }
 
   return (
     <article
       aria-labelledby={`timeline-event-title-${item.id}`}
-      className={`timeline-event-card importance-${importance} ${isSelected ? "is-selected" : ""}`}
+      className={className}
       id={`timeline-event-${item.id}`}
       onClick={() => onSelect(item.id)}
       onFocus={() => onSelect(item.id)}
-      style={{ "--event-color": item.color } as CSSProperties}
+      style={style}
       tabIndex={0}
     >
       {cardContent}
