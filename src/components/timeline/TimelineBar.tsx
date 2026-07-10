@@ -86,12 +86,16 @@ export function TimelineBar({ config, previewLabel }: TimelineBarProps) {
         className="timeline-stage"
         ref={stageRef}
         style={{
-          minHeight: useCompactEventList ? 42 : layout.stageHeight
+          minHeight: useCompactEventList ? 34 : layout.stageHeight
         }}
       >
         <div
           className="timeline-bar-row"
-          style={{ left: layout.trackLeft, top: layout.barTop, width: layout.trackWidth }}
+          style={{
+            left: layout.trackLeft,
+            top: useCompactEventList ? 0 : layout.barTop,
+            width: layout.trackWidth
+          }}
         >
           <div className="timeline-bar-track">
             <div

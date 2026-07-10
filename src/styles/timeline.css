@@ -265,7 +265,7 @@
 .timeline-panel.is-compact-events .mobile-event-list {
   display: grid;
   gap: 8px;
-  margin-top: 14px;
+  margin-top: 18px;
 }
 
 .timeline-panel.is-compact-events .mobile-event-item {
