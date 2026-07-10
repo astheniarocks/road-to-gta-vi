@@ -11,12 +11,13 @@ function getCountdown(endDateValue: string, now = new Date()) {
   const end = new Date(`${endDateValue}T00:00:00`);
   const remaining = Math.max(0, end.getTime() - now.getTime());
   const totalSeconds = Math.floor(remaining / 1000);
+  const totalMinutes = Math.floor(totalSeconds / 60);
   const days = Math.floor(totalSeconds / 86400);
   const hours = Math.floor((totalSeconds % 86400) / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
 
-  return { days, hours, minutes, seconds };
+  return { days, hours, minutes, seconds, totalMinutes, totalSeconds };
 }
 
 export function TimelineProgress({ percent, startDate, endDate, endDateValue }: TimelineProgressProps) {
@@ -50,6 +51,14 @@ export function TimelineProgress({ percent, startDate, endDate, endDateValue }: 
         <div className="timeline-countdown-row">
           <span>{String(countdown.seconds).padStart(2, "0")}</span>
           <strong>Seconds Left</strong>
+        </div>
+        <div className="timeline-countdown-row timeline-countdown-row-wide">
+          <span>{countdown.totalMinutes.toLocaleString()}</span>
+          <strong>Total Minutes Left</strong>
+        </div>
+        <div className="timeline-countdown-row timeline-countdown-row-wide">
+          <span>{countdown.totalSeconds.toLocaleString()}</span>
+          <strong>Total Seconds Left</strong>
         </div>
       </div>
     </div>
