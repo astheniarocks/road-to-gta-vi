@@ -17,7 +17,7 @@ function getCountdown(endDateValue: string, now = new Date()) {
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
 
-  return { days, hours, minutes, seconds, totalMinutes, totalSeconds };
+  return { days, hours, minutes, seconds, totalMinutes, totalSeconds, totalMilliseconds: remaining };
 }
 
 export function TimelineProgress({ percent, startDate, endDate, endDateValue }: TimelineProgressProps) {
@@ -25,7 +25,7 @@ export function TimelineProgress({ percent, startDate, endDate, endDateValue }: 
   const countdown = useMemo(() => getCountdown(endDateValue, now), [endDateValue, now]);
 
   useEffect(() => {
-    const interval = window.setInterval(() => setNow(new Date()), 1000);
+    const interval = window.setInterval(() => setNow(new Date()), 100);
     return () => window.clearInterval(interval);
   }, []);
 
@@ -59,6 +59,10 @@ export function TimelineProgress({ percent, startDate, endDate, endDateValue }: 
         <div className="timeline-countdown-row timeline-countdown-row-wide">
           <span>{countdown.totalSeconds.toLocaleString()}</span>
           <strong>Total Seconds Left</strong>
+        </div>
+        <div className="timeline-countdown-row timeline-countdown-row-wide">
+          <span>{countdown.totalMilliseconds.toLocaleString()}</span>
+          <strong>Total Milliseconds Left</strong>
         </div>
       </div>
     </div>
