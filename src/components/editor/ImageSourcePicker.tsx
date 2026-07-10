@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { imageAssetOptions } from "../../data/assetManifest";
 
 type ImageSourcePickerProps = {
   label: string;
@@ -81,15 +82,37 @@ export function ImageSourcePicker({
           />
         </label>
       ) : (
-        <label className="field-label">
-          {sourceType === "asset" ? "Asset path" : "Image URL"}
-          <input
-            placeholder={sourceType === "asset" ? suggestedAssetPath : "https://example.com/image.jpg"}
-            type="text"
-            value={value ?? ""}
-            onChange={(event) => onChange(event.target.value)}
-          />
-        </label>
+        <>
+          {sourceType === "asset" && imageAssetOptions.length ? (
+            <label className="field-label">
+              Committed asset
+              <select
+                value={imageAssetOptions.some((option) => option.path === value) ? value : ""}
+                onChange={(event) => {
+                  if (event.target.value) {
+                    onChange(event.target.value);
+                  }
+                }}
+              >
+                <option value="">Choose an image...</option>
+                {imageAssetOptions.map((option) => (
+                  <option key={option.path} value={option.path}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : null}
+          <label className="field-label">
+            {sourceType === "asset" ? "Asset path" : "Image URL"}
+            <input
+              placeholder={sourceType === "asset" ? suggestedAssetPath : "https://example.com/image.jpg"}
+              type="text"
+              value={value ?? ""}
+              onChange={(event) => onChange(event.target.value)}
+            />
+          </label>
+        </>
       )}
 
       <p className={`field-help ${sourceType === "local-preview" ? "warning-text" : ""}`}>
