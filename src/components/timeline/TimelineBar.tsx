@@ -78,6 +78,7 @@ export function TimelineBar({ config, previewLabel }: TimelineBarProps) {
     >
       {previewLabel ? <p className="timeline-preview-label">{previewLabel}</p> : null}
       <TimelineProgress
+        endDateValue={config.endDate}
         endDate={formatDisplayDate(config.endDate)}
         percent={percent}
         startDate={formatDisplayDate(config.startDate)}

@@ -72,6 +72,38 @@
   font-size: 0.95rem;
 }
 
+.timeline-countdown {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(86px, 1fr));
+  gap: 6px;
+  width: min(100%, 520px);
+}
+
+.timeline-countdown-row {
+  display: grid;
+  gap: 2px;
+  padding: 7px 9px;
+  border: 1px solid color-mix(in srgb, var(--accent-cyan), transparent 72%);
+  border-radius: var(--radius-small);
+  background: rgba(0, 0, 0, 0.26);
+}
+
+.timeline-countdown-row span {
+  color: var(--text-strong);
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 750;
+  line-height: 1;
+}
+
+.timeline-countdown-row strong {
+  color: var(--accent-cyan);
+  font-size: 0.66rem;
+  font-weight: 750;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
 .timeline-stage {
   position: relative;
   width: 100%;
@@ -395,6 +427,11 @@
   .timeline-progress-label {
     font-size: clamp(2rem, 14vw, 4rem);
   }
+
+  .timeline-countdown {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: min(100%, 360px);
+  }
 }
 
 @media (max-width: 520px) {
@@ -420,5 +457,9 @@
 
   .timeline-panel.is-compact-events .mobile-event-list {
     margin-top: 12px;
+  }
+
+  .timeline-countdown-row {
+    padding: 6px 8px;
   }
 }
